@@ -17,7 +17,7 @@ const createJavaProject = () => {
 
         // Create main.py and add the content it takes 
         
-        const mainfilepath = vscode.Uri.joinPath(targeturi,"/java-cloud-function/main.js");
+        const mainfilepath = vscode.Uri.joinPath(targeturi,"/java-cloud-function/main.java");
         vscode.workspace.fs.writeFile(mainfilepath, new TextEncoder().encode(mainvalue)).then;
 
         // create build.gradle

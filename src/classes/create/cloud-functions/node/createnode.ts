@@ -1,13 +1,18 @@
 
-
-import { strict } from 'assert';
-import { error } from 'console';
-import { TextDecoder, TextEncoder } from 'util';
+import { type } from 'os';
+import { TextEncoder } from 'util';
 import * as vscode from 'vscode';
-import { mainvalue, packagevalue} from './values';
+import { eventmainvalue, httpmainvalue,packagevalue} from './values';
+
+// create project
+const creatNodeProject = (type="http")=>{
+
+    var mainvalue = "";
+    // identify if it's http or event
+    if (type === "http") { mainvalue = httpmainvalue;
+    }else{ mainvalue = eventmainvalue; }
 
 
-const createNodeProject = () => { 
     if(vscode.workspace.workspaceFolders !== undefined) {
 
         // Uri of current workspace 
@@ -20,7 +25,7 @@ const createNodeProject = () => {
         vscode.workspace.fs.createDirectory(newuri);
         
 
-        // Create main.py and add the content it takes 
+        // Create main.js and add the content it takes 
         
         const mainfilepath = vscode.Uri.joinPath(targeturi,"/node-cloud-function/main.js");
 
@@ -34,13 +39,8 @@ const createNodeProject = () => {
     } 
     else {
         var errorMessage = "There were an error on building project" ;
-    
         vscode.window.showErrorMessage(errorMessage);
-
     }
-
-
-
 };
 
-export {createNodeProject};
+export {creatNodeProject};

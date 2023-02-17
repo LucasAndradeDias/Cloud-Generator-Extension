@@ -8,7 +8,8 @@ With this extension (still on development), you'll be able to code yout google c
 -- Google cloud functions pre build codes
 -- Google cloud App engine pre build codes
 
--- Google cloud App engine easy deploy
+-- Google cloud App engine ea
+
 
 
 ## Requirements

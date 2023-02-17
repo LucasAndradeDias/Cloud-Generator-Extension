@@ -1,30 +1,39 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-import { createPythonProject } from "./classes/create/event/python/createpython";
 
-import {createNodeProject} from "./classes/create/event/node/createnode";
-
-import { createGoProject } from './classes/create/event/go/creategolang';
-
-import { createJavaProject } from './classes/create/event/java/createjava';
+import { createPythonProject } from './classes/create/cloud-functions/python/createpython';
+import { createGoProject } from './classes/create/cloud-functions/go/creategolang';
+import { createJavaProject } from './classes/create/cloud-functions/java/createjava';
+import { creatNodeProject } from './classes/create/cloud-functions/node/createnode';
 
 
-
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-	context.subscriptions.push(vscode.commands.registerCommand("cloudFunctionsGenerator.createPythonFunction", ()=>{createPythonProject();}));
 
-	context.subscriptions.push(vscode.commands.registerCommand("cloudFunctionsGenerator.createNodeProject", ()=>{createNodeProject();}));
+	// CLOUD FUNCTION PRE BUILD TEMPLATE HTTP ----
+	// node
+	context.subscriptions.push(vscode.commands.registerCommand("cloudFunctionsGenerator.createHttpNodeProject", ()=>{creatNodeProject();}));
+	// python
+	context.subscriptions.push(vscode.commands.registerCommand("cloudFunctionsGenerator.createHttpPythonFunction", ()=>{createPythonProject();}));
 
-	context.subscriptions.push(vscode.commands.registerCommand("cloudFunctionsGenerator.createGoProject", ()=>{createGoProject();} ));
-	
-	context.subscriptions.push(vscode.commands.registerCommand("cloudFunctionsGenerator.createJavaProject", ()=>{createJavaProject();} ));
+
+
+
+
+
+
+
+	// CLOUD FUNCTION PRE BUILD TEMPLATES EVENT DRIVEN  ----- 
+	// python
+	context.subscriptions.push(vscode.commands.registerCommand("cloudFunctionsGenerator.createEventPythonFunction", ()=>{createPythonProject("event");}));
+	// node
+	context.subscriptions.push(vscode.commands.registerCommand("cloudFunctionsGenerator.createEventNodeProject", ()=>{creatNodeProject("event");}));
+	// Golang
+	context.subscriptions.push(vscode.commands.registerCommand("cloudFunctionsGenerator.createEventGoProject", ()=>{createGoProject();} ));
+	//Java
+	context.subscriptions.push(vscode.commands.registerCommand("cloudFunctionsGenerator.createEventJavaProject", ()=>{createJavaProject();}));
 
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {}
+
