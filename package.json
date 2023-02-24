@@ -1,7 +1,7 @@
 {
-  "name": "cloud-functions-generator",
-  "displayName": "cloudFunctionsGenerator",
-  "description": "Generate a pre build cloud functions project ",
+  "name": "cloud-generator",
+  "displayName": "CloudGenerator",
+  "description": "A tool to help to build Cloud Computing serveless projects",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.75.0"
@@ -10,25 +10,34 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:cloudFunctionsGenerator.createHttpPythonFunction",
-    "onCommand:cloudFunctionsGenerator.createHttpNodeProject",
+    "onCommand:CloudGenerator.createAppEnginePython",
+
+
+    "onCommand:CloudGenerator.createHttpPythonFunction",
+    "onCommand:CloudGenerator.createHttpNodeProject",
     
-    "onCommand:cloudFunctionsGenerator.createEventPythonFunction",
-    "onCommand:cloudFunctionsGenerator.createEventNodeProject",
-    "onCommand:cloudFunctionsGenerator.createEventGoProject",
-    "onCommand:cloudFunctionsGenerator.createEventJavaProject"
+    "onCommand:CloudGenerator.createEventPythonFunction",
+    "onCommand:CloudGenerator.createEventNodeProject",
+    "onCommand:CloudGenerator.createEventGoProject",
+    "onCommand:CloudGenerator.createEventJavaProject"
 
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
-      {"command": "cloudFunctionsGenerator.createHttpPythonFunction","category": "Cloud-function-generator","title": "Create python http cloud function project"},
-      {"command": "cloudFunctionsGenerator.createHttpNodeProject","category": "Cloud-function-generator","title": "Create node http cloud function project"},
       
-      {"command": "cloudFunctionsGenerator.createEventNodeProject","category": "Cloud-function-generator","title": "Create node event cloud function project"},      
-      {"command": "cloudFunctionsGenerator.createEventPythonFunction","category": "Cloud-function-generator","title": "Create python event cloud function project"},
-      {"command": "cloudFunctionsGenerator.createEventGoProject","category": "Cloud-function-generator","title": "Create golang event cloud function project"},
-      {"command": "cloudFunctionsGenerator.createEventJavaProject","category": "Cloud-function-generator","title": "Create java event cloud function project"}
+
+      {"command": "CloudGenerator.createAppEnginePython","category": "Cloud-generator","title": "Create python app engine project"},
+
+
+
+      {"command": "CloudGenerator.createHttpPythonFunction","category": "Cloud-function-generator","title": "Create python http cloud function project"},
+      {"command": "CloudGenerator.createHttpNodeProject","category": "Cloud-function-generator","title": "Create node http cloud function project"},
+      
+      {"command": "CloudGenerator.createEventNodeProject","category": "Cloud-function-generator","title": "Create node event cloud function project"},      
+      {"command": "CloudGenerator.createEventPythonFunction","category": "Cloud-function-generator","title": "Create python event cloud function project"},
+      {"command": "CloudGenerator.createEventGoProject","category": "Cloud-function-generator","title": "Create golang event cloud function project"},
+      {"command": "CloudGenerator.createEventJavaProject","category": "Cloud-function-generator","title": "Create java event cloud function project"}
   
     
     ]

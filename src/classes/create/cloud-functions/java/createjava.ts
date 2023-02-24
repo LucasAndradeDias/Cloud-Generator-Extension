@@ -23,16 +23,12 @@ const createJavaProject = () => {
         // create build.gradle
         const buildpath = vscode.Uri.joinPath(targeturi,"/java-cloud-function/build.gradle");
         vscode.workspace.fs.writeFile(buildpath, new TextEncoder().encode(buildvalue));
-        
     } 
     else {
         var errorMessage = "There were an error on building project" ;
-    
         vscode.window.showErrorMessage(errorMessage);
 
     }
-
-
 
 };
 
