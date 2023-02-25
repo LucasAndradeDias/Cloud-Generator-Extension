@@ -1,4 +1,4 @@
-# cloud-generator
+# Cloud Generator Extension
 
 This vs code extension allow users to easily create Cloud Computing apps with pre-build templates for differents languages and easy deploy buttons for Google Cloud Platform, Amazon Web Services and Microsoft Azure.
 
