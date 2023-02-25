@@ -46,9 +46,6 @@ const packagevalueExpress = `
 
 }`;
 
-const reactValue = `
-
-`;
 
 const gcloudignore = `
 /node_modules/
@@ -59,4 +56,4 @@ const gitignore = `
 `;
 
 
-export {expressvalue,reactValue,appYamlValue,packagevalueExpress,gcloudignore,gitignore};
+export {expressvalue,appYamlValue,packagevalueExpress,gcloudignore,gitignore};
