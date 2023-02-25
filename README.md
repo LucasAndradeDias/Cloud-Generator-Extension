@@ -1,21 +1,26 @@
-# cloud-generator README
+# cloud-generator
 
-With this extension (still on development), you'll be able to code yout google cloud serveless programs faster and correcly through pre build codes and using the faster and easy deploy button   
+This vs code extension allow users to easily create Cloud Computing apps with pre-build templates for differents languages and easy deploy buttons for Google Cloud Platform, Amazon Web Services and Microsoft Azure.
 
 ## Features
 
-\!\[Pre build codes\]\
--- Google cloud functions pre build codes
--- Google cloud App engine pre build codes
+### Google Cloud Platform:
+###### Change the gcp project you want to work with; 
+###### Cloud Functions Generator: Pre build code templates and deploy buttons;
+###### App engine: Pre build code templates and deploy buttons;
+###### Cloud Run: Pre build code templates and deploy buttons;
 
--- Google cloud App engine ea
+### Amazon Web Services:
+###### Lambda: Pre build code templates and deploy buttons;
+
+### Microsoft Azure:
+###### 
+
 
 
 
 ## Requirements
 
--Google cloud account set on enviroment
+###### For deploys in any cloud is needed to be logged in currently cloud SDK
 
-### 1.0.0
-
-New: auto creating cloud functions codes (go, java, python and nodejs);
+### For Updates about new features and bug fixes please read CHANGELOG.md 

@@ -1,9 +1,16 @@
-# Change Log
 
-All notable changes to the "cloud-functions-generator" extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+# 0.4.5
+- New features:
+    * App engine templates:
+        Now the Cloud-generator is able to create pre-build app engine for:
+        - Python Flask API (CloudGenerator.createAppEnginePython)
+        - Node Express (CloudGenerator.createAppEngineExpress)
+        - Node React (CloudGenerator.createAppEngineReact)
 
-## [Unreleased]
+- Bugs fix:
+    * Command for create cloud functions http for java fixed.
 
-- Initial release
+
+
+
