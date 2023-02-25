@@ -1,6 +1,8 @@
 import { TextEncoder } from 'util';
 import * as vscode from 'vscode';
-import { expressvalue,reactValue,appYamlValue,packagevalueReact,packagevalueExpress,gcloudignore,gitignore } from './values';
+
+import { expressvalue,appYamlValue,packagevalueExpress,gcloudignore,gitignore } from './values';
+import {gitignorevalue,packagevaluereact,appjsvalue,indexcssvalue,indexjsvalue,appcssvalue} from "./reactvalues";
 
 const createExpressAppengineProject = ()=>{
 
@@ -14,7 +16,7 @@ const createExpressAppengineProject = ()=>{
         vscode.workspace.fs.createDirectory(newuri);
 
         // Create app.js and add the content it takes 
-        const mainfilePath = vscode.Uri.joinPath(targeturi,"/express-appengine-project/app.js");
+        const mainfilePath = vscode.Uri.joinPath(targeturi,"/express-appengine-project/App.js");
         vscode.workspace.fs.writeFile(mainfilePath, new TextEncoder().encode(expressvalue));
 
         // Create app.yaml
@@ -55,8 +57,24 @@ const createReactAppengineProject= ()=>{
         vscode.workspace.fs.createDirectory(newuri);
 
         // Create app.js and add the content it takes 
-        const mainfilePath = vscode.Uri.joinPath(targeturi,"/react-appengine-project/app.js");
-        vscode.workspace.fs.writeFile(mainfilePath, new TextEncoder().encode(reactValue));
+        const mainfilePath = vscode.Uri.joinPath(targeturi,"/react-appengine-project/src/App.js");
+        vscode.workspace.fs.writeFile(mainfilePath, new TextEncoder().encode(appjsvalue));
+
+        // App css 
+        const appCssPath = vscode.Uri.joinPath(targeturi,"/react-appengine-project/src/App.css");
+        vscode.workspace.fs.writeFile(appCssPath, new TextEncoder().encode(appcssvalue));
+
+        // indexjs 
+
+        const indexJsPath = vscode.Uri.joinPath(targeturi,"/react-appengine-project/src/index.js");
+        vscode.workspace.fs.writeFile(indexJsPath, new TextEncoder().encode(indexjsvalue));
+
+
+        // index css 
+        const indexCssPath = vscode.Uri.joinPath(targeturi,"/react-appengine-project/src/index.css");
+        vscode.workspace.fs.writeFile(indexCssPath, new TextEncoder().encode(indexcssvalue));
+
+
 
         // Create app.yaml
         const appyamlPath = vscode.Uri.joinPath(targeturi,"/react-appengine-project/app.yaml");
@@ -64,15 +82,15 @@ const createReactAppengineProject= ()=>{
 
         // Create .gcloudignore 
         const gcloudignorePath = vscode.Uri.joinPath(targeturi,"/react-appengine-project/.gcloudignore");
-        vscode.workspace.fs.writeFile(gcloudignorePath,new TextEncoder().encode(gcloudignore));
+        vscode.workspace.fs.writeFile(gcloudignorePath,new TextEncoder().encode(gitignorevalue));
 
         // Create .gitignore
         const gitignorePath = vscode.Uri.joinPath(targeturi,"/react-appengine-project/.gitignore");
-        vscode.workspace.fs.writeFile(gitignorePath,new TextEncoder().encode(gitignore));
+        vscode.workspace.fs.writeFile(gitignorePath,new TextEncoder().encode(gitignorevalue));
 
         // create package.json
         const packagepath = vscode.Uri.joinPath(targeturi,"/react-appengine-project/package.json");
-        vscode.workspace.fs.writeFile(packagepath, new TextEncoder().encode(packagevalueReact));
+        vscode.workspace.fs.writeFile(packagepath, new TextEncoder().encode(packagevaluereact));
 
     } 
     else {
