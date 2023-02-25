@@ -32,6 +32,23 @@ env_variables:
 entrypoint: node app.js
 `; 
 
+
+const packagevalueReact = `
+{
+    "engines": {
+        "node": "18.0.0"
+    },
+    "scripts": {
+        "start": "node app.js"
+      },
+    "dependencies":{
+      "react": "^17.0.2",
+      "react-dom": "^17.0.2",
+      "react-scripts": "5.0.0",  
+    }
+
+}`;
+
 const packagevalueExpress = `
 {
     "engines": {
@@ -56,8 +73,7 @@ const gcloudignore = `
 
 const gitignore = `
 /node_modules
-
 `;
 
 
-export {expressvalue,reactValue,appYamlValue,packagevalueExpress,gcloudignore,gitignore};
+export {expressvalue,reactValue,appYamlValue,packagevalueReact,packagevalueExpress,gcloudignore,gitignore};
