@@ -12,19 +12,19 @@ app.listen(port, () => {
 })
 `;
 
-const appYamlValue = `
+const appYamlValue = (projectName:string)=>`
 # Node version (Ex: node 18 = nodejs18)
 runtime: nodejs18
 
 instance_class: F1
 
 #the name of service to be deployed
-service: service-name
+service: ${projectName}
 
 
 # Write your envs here
 env_variables:
-  INSTANCE_NAME: "My project name",
+  INSTANCE_NAME: "${projectName}",
   
   HOST_PORT: 443
 

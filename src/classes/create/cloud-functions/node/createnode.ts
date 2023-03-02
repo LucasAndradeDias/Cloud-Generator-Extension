@@ -5,7 +5,7 @@ import * as vscode from 'vscode';
 import { eventmainvalue, httpmainvalue,packagevalue} from './values';
 
 // create project
-const creatNodeProject = (type="http")=>{
+const creatNodeProject = async (type="http")=>{
 
     var mainvalue = "";
     // identify if it's http or event
@@ -15,26 +15,34 @@ const creatNodeProject = (type="http")=>{
 
     if(vscode.workspace.workspaceFolders !== undefined) {
 
+
+        var projectName:string = "";
+
+        await vscode.window.showInputBox({placeHolder:"Write the project name"}).then((value)=>{projectName = `${value}`;});
+
+
+
         // Uri of current workspace 
         let targeturi = vscode.workspace.workspaceFolders[0].uri;
                 
         // Create the src folder
         
-        const newuri = vscode.Uri.joinPath(targeturi,"/node-cloud-function/src");
-        
+        const newuri = vscode.Uri.joinPath(targeturi,`${projectName}/src`);
         vscode.workspace.fs.createDirectory(newuri);
         
 
         // Create main.js and add the content it takes 
         
-        const mainfilepath = vscode.Uri.joinPath(targeturi,"/node-cloud-function/main.js");
-
+        const mainfilepath = vscode.Uri.joinPath(targeturi,`${projectName}/main.js`);
         vscode.workspace.fs.writeFile(mainfilepath, new TextEncoder().encode(mainvalue)).then;
 
         // create package.json
-        const packagepath = vscode.Uri.joinPath(targeturi,"/node-cloud-function/package.json");
-
+        const packagepath = vscode.Uri.joinPath(targeturi,`${projectName}/package.json`);
         vscode.workspace.fs.writeFile(packagepath, new TextEncoder().encode(packagevalue));
+
+
+        // Info about success 
+        vscode.window.showInformationMessage("New NodeJs cloud functions project: '"+projectName+"' created." );
 
     } 
     else {

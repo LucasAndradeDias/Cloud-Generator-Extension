@@ -12,15 +12,20 @@ const  deployCloudFunctions = async () =>{
     // Check if the system permits scritps
 
     // 
+    let inpu = await vscode.window.showInputBox().then((value)=>{
+        vscode.window.showInformationMessage("INPUT "+value);
+    }
+    );
+    vscode.window.showInformationMessage("INPUT2 "+inpu);
 
 
-    let gcpInstance = new Gcp("none","none");
+    // let gcpInstance = new Gcp("none","none");
     
-    await gcpInstance.changeProjectId("fine-doodad-275213");
+    // await gcpInstance.changeProjectId("fine-doodad-275213");
 
-    await gcpInstance.getGcpInfos();
+    // await gcpInstance.getGcpInfos();
 
-    console.log(gcpInstance.projectId);
+    // console.log(gcpInstance.projectId);
 
 
 };
