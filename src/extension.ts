@@ -1,5 +1,12 @@
 import * as vscode from 'vscode';
 
+// Deploy functions
+import {deployCloudFunctions} from "./classes/deploys/gcp/deploygcp";
+
+
+
+
+
 // App engine pre build templates
 import {createAppEnginePythonProject} from './classes/create/appengine/python/createpythonappengine';
 import { createExpressAppengineProject,createReactAppengineProject } from './classes/create/appengine/node/createnodeappengine';
@@ -12,6 +19,12 @@ import { creatNodeProject } from './classes/create/cloud-functions/node/createno
 
 
 export function activate(context: vscode.ExtensionContext) {
+
+	// Deploy Test
+	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.deployCloudFunctions",()=>{deployCloudFunctions();}));
+
+
+
 
 	// APP ENGINE PRE BUILD TEMPLATES 
 	// Python
