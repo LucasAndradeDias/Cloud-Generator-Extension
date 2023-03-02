@@ -1,5 +1,5 @@
-const packagevaluereact = `{
-    "name": "react-example",
+const packagevaluereact = (projectName:string)=>`{
+    "name": "${projectName}",
     "version": "0.1.0",
     "private": true,
     "dependencies": {

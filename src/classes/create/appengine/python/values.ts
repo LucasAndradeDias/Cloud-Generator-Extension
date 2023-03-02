@@ -18,19 +18,19 @@ if __name__ == '__main__':
 `;
 
 
-const appYamlValue = `
+const appYamlValue = (projectName:string) => `
 # Python version (Ex: Python 3.9.0 = python390)
 runtime: python310 
 
 instance_class: F1
 
 #the name of service to be deployed
-service: service-name
+service: ${projectName}
 
 
 # Write your envs here
 env_variables:
-  INSTANCE_NAME: "My project name",
+  INSTANCE_NAME: " ${projectName}",
   
   HOST_PORT: 443
 
