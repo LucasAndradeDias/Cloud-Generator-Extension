@@ -1,8 +1,7 @@
-import { Gcp,System } from '../../tools/tools';
 
 import * as vscode from 'vscode';
-const { spawn } = require('node:child_process');
-const { exec } = require('node:child_process');
+import { Gcp } from '../../tools/tools';
+import {CreateFunction,AdvancedConfig} from "../../../interfaces/interfaces"
 
 
 // Windows
@@ -13,7 +12,20 @@ const deployCloudFunctions = async () =>{
     gcpClass.iniciate();
 
 
-    await gcpClass.cloudFunctionDeploy("D:\\projects\\FuncFunc");
+    let advancedConfig:AdvancedConfig = {"memory":"1024MB","securityLevel":"secure-optional","timeout":500};
+
+    await gcpClass.createCloudFunction( {"entryPoint":"main",
+    "functionName":"testFunc2",
+    "projectPath":"D:\\projects\\FuncFunc",
+    "region":"us-central1",
+    "runtime":"python39",
+    "trigger":"http",
+    "instanceConfig":advancedConfig
+    })
+    .catch((err)=>{
+        vscode.window.showErrorMessage(err.message);
+        console.log("erro ",err.message);}
+    );
     
 
 

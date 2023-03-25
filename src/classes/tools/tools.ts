@@ -1,5 +1,5 @@
 // Import all interfaces needed
-import {CloudFunctionResponse,FunctionDeploy} from "../../interfaces/interfaces";
+import {CloudFunctionResponse,FunctionDeploy,CreateFunction} from "../../interfaces/interfaces";
 
 // Require the modules used
 const util = require('node:util');
@@ -14,13 +14,8 @@ class System{
         
         const { stdout, stderr } = await exec(command);
         
-        if (stdout){
-            console.log(stdout);
-            return stdout;
-        }else{
-            console.log(stderr);
-            throw new Error(stderr);
-        };
+        if (stdout){return stdout;}
+        else{throw new Error(stderr);};
         
     }
     
@@ -76,19 +71,18 @@ class System{
         // Use the Node.js `exec` function to execute the PowerShell command `Test-Path` to verify the existence of the path.
         // If `file` is true, use the `-PathType Leaf` flag to verify that the path is a file.
         // Otherwise, do not pass any flag to verify that the path is a directory.
-        let {stderr,stdout} = await exec(`Test-Path -Path ${path} ${ file ? "-PathType Leaf" : " "}`);
         
-        // If there was an error executing the command, throw an error.
-        if (stderr) {
-            throw new Error("Could not execute the command to verify the path");
-        }
+        let {stderr,stdout} = await exec(`Test-Path -Path ${path} ${ file ? "-PathType Leaf" : " "}`,{shell:"powershell.exe"});
 
+
+        // If there was an error executing the command, throw an error.
+        if (stderr) {throw new Error("Could not execute the command to verify the path");}
         
-        if (stdout === "False"){return false;}
-        if (stdout === "True"){return true;}
+        if (stdout.trim() === "False"){return false;}
+
+        if (stdout.trim() === "True"){return true;}
 
     }
-
 
 }
 
@@ -156,43 +150,81 @@ class Gcp{
      * This function utilizes Google Cloud Storage to 
      *
     */
-    async createCloudFunction(folderPath:string , config:{}){
-      
+    async createCloudFunction(config:CreateFunction){
 
-        try {
             // Checks if folder exists
-            const pathExists = await this.systemClient.checkPath(folderPath);
+            const pathExists = await this.systemClient.checkPath(config.projectPath);
 
             // If not return an error
             if (pathExists === false){throw new Error("The given folder does not exist.");}
-
             
-            const zipFile:string = await this.systemClient.zipFolder(folderPath+"\\*.*","testeZip","D:\\projects").then(data => data);
+            const zipFile:string = await this.systemClient.zipFolder(config.projectPath+"\\*.*","testeZip",config.projectPath).then(data => data);
             
     
             // Upload content in Cloud Storage
     
-            const bucketName = process.env;
+            //const bucketName = process.env
     
-            const storagePath = `gs://${bucketName}`;
+            //const storagePath = `gs://${bucketName}`;
     
-            await this.systemClient.execSystemCommand(`gsutil cp ${zipFile} ${storagePath}}`);
+            //await this.systemClient.execSystemCommand(`gsutil cp ${zipFile} ${storagePath}}`);
     
     
             // Exclude Zip 
+
+
+            
+            let deployFlags = [];
+
+            if (config.instanceConfig){
     
+                if (config.instanceConfig?.memory){
+                    deployFlags.push(" --memory="+config.instanceConfig?.memory)
+                }
+                if(config.instanceConfig.securityLevel){
+                    deployFlags.push(" --security-level="+config.instanceConfig.securityLevel)
+                }
+                if (config.instanceConfig.timeout){
+                    // Second genearation of cloud functions allows timout time limit in 3600 seconds
+                    
+                    
+                    if(config.generation === "GEN2"){
+
+                        if (config.instanceConfig.timeout >= 3600){
+                            throw new Error("Generation 2 timout limit is 3600 seconds, and it gave "+config.instanceConfig.timeout+" seconds." )
+                        }
+                        deployFlags.push(" --timeout= "+config.instanceConfig.timeout)
+                    }
+                    else if (config.instanceConfig.timeout <= 540){
+                        deployFlags.push(" --timeout= "+config.instanceConfig.timeout)
+                    }else {
+                        throw new Error("Generation 1 timout limit is 540 seconds, and it gave "+config.instanceConfig.timeout+" seconds." )
+                    }
+                    
+                     
+                    
+
+                    // First generation allows only 540
+                    
+
+                }
+
+            }
+            console.log(deployFlags);
+
+            
             // Create function
-            await this.cloudFunctionDeploy({functionName:"Teste",entryPoint:"teste",region:"teste",runtime:"teste",trigger:"http",source:"teste"});
-        }catch(err){
-            return err;
-        }
+            //await this.cloudFunctionDeploy({functionName:"Teste",entryPoint:"teste",region:"teste",runtime:"teste",trigger:"http",source:"teste"});
+        
+        
+
 
     } 
 
     /**
      *@param functionName As the its name suggests, it's the name of of the function
-    * @param source The Cloud Storage Path (ex: gs://bucketName/file.zip)
-    * @param running The language function is running
+     * @param source The Cloud Storage Path (ex: gs://bucketName/file.zip)
+     * @param running The language function is running
     * @param entryPoint The main function to be called when the function is triggered
     * @param region Region where you want to host the function
     * @param trigger Trigger method function is using 
@@ -202,10 +234,9 @@ class Gcp{
     *  
     * @returns url The new function url | <CloudFunctionResponse>
     * 
-    * 
     * @description This function creates or update a cloud function in GCP using flags and CLI commands to it
-    */
-    private async cloudFunctionDeploy(config:FunctionDeploy):Promise <CloudFunctionResponse> {
+     */
+    private async cloudFunctionDeploy(config:FunctionDeploy){
         
         // Command to be executed by gcloud CLI
         let defaultCommand = `gcloud functions deploy ${config.functionName} 
@@ -222,14 +253,20 @@ class Gcp{
         // Get trigger type
         if (config.trigger === "http"){ defaultCommand+" --trigger-http";}
 
+
+
+        if (config)
+
+
         return new Promise ( async ()=>{
 
             // Execute the command in CLI
-            await this.systemClient.execSystemCommand(defaultCommand).then(()=>{
+            await this.systemClient.execSystemCommand(defaultCommand)
+            .then(()=>{
                 return {url: `https://${config.region}-${this.projectId}.cloudfunctions.net/${config.functionName}`};
             })
             .catch((err)=>{
-                console.log("Error with function deploy");
+                console.log("Error with function deploy",err);
                 throw new Error("Error building the function\nError: "+err);
             });
         });

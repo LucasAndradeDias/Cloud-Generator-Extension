@@ -23,7 +23,6 @@ export interface FunctionDeploy {
     entryPoint:string,
     region:string,
     trigger:"http" | "event",
-    memory?:string,
     varibles?:string | string[],
     flags?:string | string[]
 }
@@ -36,25 +35,15 @@ export interface CreateFunction {
     region:string,
     trigger:"http" | "event",
     varibles?:string[],
-    advancedConfig?:AdvancedConfig
-    flags?:string | string[]
+    instanceConfig?:AdvancedConfig,
+    generation?:"GEN1" | "GEN2"
 }
 
 
 export interface AdvancedConfig {
-    memory?:memory
-}
-
-
-enum memory{
-    "128MB"=0,
-    "256MB"=1,
-    "512MB"=2,
-    "1024MB"=3,
-    "2048MB"=4,
-    "4096MB"=5,
-    "8192MB"=6
-
+    memory?: "128MB" | "256MB" | "512MB" | "1024MB" | "2048MB" | "4096MB" | "8192MB",
+    securityLevel?: "secure-always" | "secure-optional",
+    timeout?:number
 }
 
 
