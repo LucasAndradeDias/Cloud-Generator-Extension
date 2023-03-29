@@ -1,5 +1,7 @@
 // Import all interfaces needed
-import {CloudFunctionResponse,FunctionDeploy,CreateFunction} from "../../interfaces/interfaces";
+
+import { Breakpoint, ConfigurationTarget } from "vscode";
+import {FunctionDeploy,Ifunction, Regions,Generation} from "../../interfaces/interfaces";
 
 // Require the modules used
 const util = require('node:util');
@@ -15,7 +17,9 @@ class System{
         const { stdout, stderr } = await exec(command);
         
         if (stdout){return stdout;}
-        else{throw new Error(stderr);};
+        else{
+            console.log(stderr);
+            return stderr };
         
     }
     
@@ -84,6 +88,7 @@ class System{
 
     }
 
+
 }
 
 class Gcp{
@@ -150,85 +155,90 @@ class Gcp{
      * This function utilizes Google Cloud Storage to 
      *
     */
-    async createCloudFunction(config:CreateFunction){
+    async createCloudFunction(config:Ifunction){
 
-            // Checks if folder exists
-            const pathExists = await this.systemClient.checkPath(config.projectPath);
+        console.log("Iniciando processo...\n")
+        // Checks if folder exists
+        console.log("Verificando se a pasta existe\n")
+        const pathExists = await this.systemClient.checkPath(config.localPath);
 
-            // If not return an error
-            if (pathExists === false){throw new Error("The given folder does not exist.");}
-            
-            const zipFile:string = await this.systemClient.zipFolder(config.projectPath+"\\*.*","testeZip",config.projectPath).then(data => data);
-            
-    
-            // Upload content in Cloud Storage
-    
-            //const bucketName = process.env
-    
-            //const storagePath = `gs://${bucketName}`;
-    
-            //await this.systemClient.execSystemCommand(`gsutil cp ${zipFile} ${storagePath}}`);
-    
-    
-            // Exclude Zip 
+        
+        // If not return an error
+        if (pathExists === false){throw new Error("The given folder does not exist.");}
+        console.log("Pasta encontrada\n");
+
+        console.log("Zipando a pasta\n");
+        const zipFile:string = await this.systemClient.zipFolder(config.localPath+"\\*.*","testeZip",config.localPath).then(data => data);
+        console.log("Pasta zipada\n");
+        console.log(zipFile)
+
+        // Upload content in Cloud Storage
+        console.log("Updando codigo no Cloud Storage\n");
+
+        const bucketName = "teste-codes";
+
+        const storagePath = `gs://teste-codes`;
+
+        await this.systemClient.execSystemCommand(`gsutil cp ${zipFile} ${storagePath}`);
+        console.log("Codigo salvo no Cloud Storage\n");
+
+        
+        config.storagePath = "gs://teste-codes/testeZip.zip"
 
 
-            
+
+        // Check instance config
+        if (config.instanceConfig){
             let deployFlags = [];
+            
 
-            if (config.instanceConfig){
-    
-                if (config.instanceConfig?.memory){
-                    deployFlags.push(" --memory="+config.instanceConfig?.memory)
-                }
-                if(config.instanceConfig.securityLevel){
-                    deployFlags.push(" --security-level="+config.instanceConfig.securityLevel)
-                }
-                if (config.instanceConfig.timeout){
-                    // Second genearation of cloud functions allows timout time limit in 3600 seconds
-                    
-                    
-                    if(config.generation === "GEN2"){
+            if (config.instanceConfig?.memory){
+                deployFlags.push(" --memory="+config.instanceConfig?.memory);
+            }
+            if(config.instanceConfig.securityLevel){
+                deployFlags.push(" --security-level="+config.instanceConfig.securityLevel);
+            }
+            if (config.instanceConfig.timeout){
+                // Second genearation of cloud functions allows timout time limit in 3600 seconds
+                
+                if(config.generation === 1){
 
-                        if (config.instanceConfig.timeout >= 3600){
-                            throw new Error("Generation 2 timout limit is 3600 seconds, and it gave "+config.instanceConfig.timeout+" seconds." )
-                        }
-                        deployFlags.push(" --timeout= "+config.instanceConfig.timeout)
+                    if (config.instanceConfig.timeout >= 3600){
+                        throw new Error("Generation 2 timout limit is 3600 seconds, and it gave "+config.instanceConfig.timeout+" seconds." );
                     }
-                    else if (config.instanceConfig.timeout <= 540){
-                        deployFlags.push(" --timeout= "+config.instanceConfig.timeout)
-                    }else {
-                        throw new Error("Generation 1 timout limit is 540 seconds, and it gave "+config.instanceConfig.timeout+" seconds." )
-                    }
-                    
-                     
-                    
-
-                    // First generation allows only 540
-                    
-
+                    deployFlags.push(" --timeout="+config.instanceConfig.timeout);
                 }
+                
+                // First generation allows only 540
+                else if (config.instanceConfig.timeout <= 540){deployFlags.push(" --timeout="+config.instanceConfig.timeout);}
+                
+                else {throw new Error("Generation 1 timout limit is 540 seconds, and it gave "+config.instanceConfig.timeout+" seconds." );}
 
             }
-            console.log(deployFlags);
 
-            
-            // Create function
-            //await this.cloudFunctionDeploy({functionName:"Teste",entryPoint:"teste",region:"teste",runtime:"teste",trigger:"http",source:"teste"});
+            config.flags = deployFlags;
+
+        }
+
+        console.log("Criando função no Cloud Function");
+        // Create function
+        let request = await this.cloudFunctionDeploy(config)
+        .then(data=>data);
+
+        return request;
         
-        
+
 
 
     } 
 
     /**
-     *@param functionName As the its name suggests, it's the name of of the function
-     * @param source The Cloud Storage Path (ex: gs://bucketName/file.zip)
-     * @param running The language function is running
+    * @param functionName As the its name suggests, it's the name of of the function
+    * @param source The Cloud Storage Path (ex: gs://bucketName/file.zip)
+    * @param running The language function is running
     * @param entryPoint The main function to be called when the function is triggered
     * @param region Region where you want to host the function
     * @param trigger Trigger method function is using 
-    * @param memory The memory allocated to function
     * @param varibles The enviroment varibles the function is using
     * @param flags Flags you may want to add to new cloud function 
     *  
@@ -236,45 +246,37 @@ class Gcp{
     * 
     * @description This function creates or update a cloud function in GCP using flags and CLI commands to it
      */
-    private async cloudFunctionDeploy(config:FunctionDeploy){
+    private async cloudFunctionDeploy(config:Ifunction){
         
         // Command to be executed by gcloud CLI
-        let defaultCommand = `gcloud functions deploy ${config.functionName} 
-        --runtime=${config.runtime} 
-        --source=${config.source}
-        --stage-bucket=${config.source}
-        --entry-point=${config.entryPoint} 
-        --region=${config.region}
-        `;
+        var defaultCommand = `gcloud functions deploy ${config.name} --runtime=${config.runtime} --source="${config.storagePath}" --entry-point=${config.entryPoint} --region=${Regions[config.region]}`;
 
-        // Adding adicional flags to defaultCommand
-        if(config.flags){for (let flag of config.flags){defaultCommand+` ${flag}`;}}
+        // Adding adicional flags to the defaultCommand
+        if(config.flags){ for (let flag of config.flags){defaultCommand+=` ${flag}`;}}
+        
+        // Select the trigger type and add the corresponding flag to the command
+        switch (config.trigger){
 
-        // Get trigger type
-        if (config.trigger === "http"){ defaultCommand+" --trigger-http";}
+            case "http":
+                defaultCommand+=" --trigger-http";
+            break;
 
+            case "event":
+                defaultCommand+=" --trigger";
+            break;
+        }
 
-
-        if (config)
-
-
-        return new Promise ( async ()=>{
-
-            // Execute the command in CLI
-            await this.systemClient.execSystemCommand(defaultCommand)
-            .then(()=>{
-                return {url: `https://${config.region}-${this.projectId}.cloudfunctions.net/${config.functionName}`};
-            })
-            .catch((err)=>{
-                console.log("Error with function deploy",err);
-                throw new Error("Error building the function\nError: "+err);
-            });
-        });
+        console.log("command ",defaultCommand);
+        
+        await this.systemClient.execSystemCommand(defaultCommand);
+        
+        // Return the URL for the deployed function
+        return  `https://${config.region}-${this.projectId}.cloudfunctions.net/${config.name}`;
 
     }
 
 
-
+    
 
 
 
