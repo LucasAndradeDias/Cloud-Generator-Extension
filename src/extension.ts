@@ -18,6 +18,12 @@ import { createJavaProject } from './classes/create/cloud-functions/java/createj
 import { creatNodeProject } from './classes/create/cloud-functions/node/createnode';
 
 
+
+// Importing views
+import {CloudGeneratorProvider} from "./Cloud-generatorProvider"
+
+
+
 export function activate(context: vscode.ExtensionContext) {
 
 	// Deploy Test
@@ -54,6 +60,15 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createEventGoProject", ()=>{createGoProject();} ));
 	//Java
 	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createEventJavaProject", ()=>{createJavaProject();}));
+
+	
+	const rootPath = (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
+	? vscode.workspace.workspaceFolders[0].uri.fsPath : "AA";
+
+
+	vscode.window.registerTreeDataProvider("CloudGenerator",new CloudGeneratorProvider(rootPath));
+	
+
 
 }
 

@@ -1,7 +1,5 @@
 // Import all interfaces needed
-
-import { Breakpoint, ConfigurationTarget } from "vscode";
-import {FunctionDeploy,Ifunction, Regions,Generation} from "../../interfaces/interfaces";
+import {Ifunction, Regions} from "../../interfaces/interfaces";
 
 // Require the modules used
 const util = require('node:util');
@@ -93,9 +91,9 @@ class System{
 
 class Gcp{
     public projectId: string = "";
-    
+
     public account:string = "";
-    
+
     private systemClient = new System; 
 
     constructor(project?:string,account?:string){
@@ -139,16 +137,8 @@ class Gcp{
         });
     }
 
-
-
     // Create cloud function deploy
     /** 
-     * @param folderpath: The path to the folder to be deployed
-     * @param config.functionName: Name of the new cloud function;
-     * @param config.runtime: The language to run the cloud function 
-     * @param config.entryPoint: The entrypoint of function
-     * @param config.trigger: Choose the trigger method of function = "http" | "event" 
-     * @param config.region: Region where the function will be hosted (Default us-central1)
      * 
      * @description This function create and deploy a new cloud function on current gcp project.
      * Note that if you to update a function, utilize the cloudFunctionUpdate.
@@ -157,25 +147,20 @@ class Gcp{
     */
     async createCloudFunction(config:Ifunction){
 
-        console.log("Iniciando processo...\n")
+        console.log("Iniciando processo...\n");
         // Checks if folder exists
-        console.log("Verificando se a pasta existe\n")
+        console.log("Verificando se a pasta existe\n");
         const pathExists = await this.systemClient.checkPath(config.localPath);
 
         
         // If not return an error
         if (pathExists === false){throw new Error("The given folder does not exist.");}
-        console.log("Pasta encontrada\n");
 
-        console.log("Zipando a pasta\n");
+
         const zipFile:string = await this.systemClient.zipFolder(config.localPath+"\\*.*","testeZip",config.localPath).then(data => data);
-        console.log("Pasta zipada\n");
-        console.log(zipFile)
+
 
         // Upload content in Cloud Storage
-        console.log("Updando codigo no Cloud Storage\n");
-
-        const bucketName = "teste-codes";
 
         const storagePath = `gs://teste-codes`;
 
@@ -183,9 +168,7 @@ class Gcp{
         console.log("Codigo salvo no Cloud Storage\n");
 
         
-        config.storagePath = "gs://teste-codes/testeZip.zip"
-
-
+        config.storagePath = "gs://teste-codes/testeZip.zip";
 
         // Check instance config
         if (config.instanceConfig){
@@ -233,14 +216,6 @@ class Gcp{
     } 
 
     /**
-    * @param functionName As the its name suggests, it's the name of of the function
-    * @param source The Cloud Storage Path (ex: gs://bucketName/file.zip)
-    * @param running The language function is running
-    * @param entryPoint The main function to be called when the function is triggered
-    * @param region Region where you want to host the function
-    * @param trigger Trigger method function is using 
-    * @param varibles The enviroment varibles the function is using
-    * @param flags Flags you may want to add to new cloud function 
     *  
     * @returns url The new function url | <CloudFunctionResponse>
     * 
@@ -248,15 +223,16 @@ class Gcp{
      */
     private async cloudFunctionDeploy(config:Ifunction){
         
+        console.log("Criando func");
+
         // Command to be executed by gcloud CLI
-        var defaultCommand = `gcloud functions deploy ${config.name} --runtime=${config.runtime} --source="${config.storagePath}" --entry-point=${config.entryPoint} --region=${Regions[config.region]}`;
+        var defaultCommand = `gcloud functions deploy ${config.name} --runtime=${config.runtime} --source="${config.storagePath}" --entry-point=${config.entryPoint} --region=${Regions[config.region]} --quiet`;
 
         // Adding adicional flags to the defaultCommand
         if(config.flags){ for (let flag of config.flags){defaultCommand+=` ${flag}`;}}
         
         // Select the trigger type and add the corresponding flag to the command
         switch (config.trigger){
-
             case "http":
                 defaultCommand+=" --trigger-http";
             break;
@@ -265,21 +241,24 @@ class Gcp{
                 defaultCommand+=" --trigger";
             break;
         }
+        console.log("Command ", defaultCommand);
+        // Execute the command
+        let request = await this.systemClient.execSystemCommand(defaultCommand).then(data=>data);
 
-        console.log("command ",defaultCommand);
+        console.log(request)
         
-        await this.systemClient.execSystemCommand(defaultCommand);
+
         
+
         // Return the URL for the deployed function
-        return  `https://${config.region}-${this.projectId}.cloudfunctions.net/${config.name}`;
+        return  `https://${Regions[config.region]}-${this.projectId}.cloudfunctions.net/${config.name}`;
 
     }
 
 
-    
+    private async checkApis(api:string){
 
-
-
+    }
 
 
 }

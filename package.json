@@ -27,7 +27,8 @@
       {
         "command": "CloudGenerator.deployCloudFunctions",
         "category": "Cloud-Generator-Functions",
-        "title": "Deploy Cloud Functions"
+        "title": "Deploy Cloud Functions",
+        "icon": "icons/icons8-cloud-link-24.png"
       },
       {
         "command": "CloudGenerator.createAppEnginePython",
@@ -74,7 +75,30 @@
         "category": "Cloud-Generator-Functions",
         "title": "Create java event cloud function project"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "Cloud-Generator",
+          "title": "Cloud Generator",
+          "icon": "icons/icons8-cloud-link-24.png"
+        }
+      ]
+    },
+    "views": {
+      "Cloud-Generator": [
+        {
+          "id": "serverless-templates",
+          "name": "Code templates"
+        },
+        {
+          "id": "CloudGenerator",
+          "name": "Cloud Function",
+          "icon": "icons/icons8-cloud-link-24.png"
+        }
+      ]
+    }
+
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
