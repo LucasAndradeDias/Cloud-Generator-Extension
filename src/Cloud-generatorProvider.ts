@@ -3,43 +3,45 @@ import * as vscode from 'vscode';
 
 
 
-export class CloudGeneratorProvider implements vscode.TreeDataProvider<DeployFuncElement>{
-    constructor(private workspaceRoot: string) {}
+export class DeployProvider implements vscode.TreeDataProvider<DeployElement>{
+    constructor() {}
 
-    getTreeItem(element: DeployFuncElement): vscode.TreeItem {
+    getTreeItem(element: DeployElement): vscode.TreeItem {
         return element;
     }
 
-    getChildren(element?:DeployFuncElement): Thenable<DeployFuncElement[]>{
+    getChildren(element?:DeployElement): Thenable<DeployElement[]>{
 
-        if(!this.workspaceRoot){
-            vscode.window.showErrorMessage("Empty workspace");
-            return Promise.resolve([]);
-        }
+
 
         //  return one element test
         let lista = [
-            new DeployFuncElement("Cloud Function",{"command":"CloudGenerator.deployCloudFunctions","title":"Deploy Cloud Function Project"},vscode.TreeItemCollapsibleState.None,"google-cloud-functions-svgrepo-com.svg"),
-            new DeployFuncElement("Cloud Run Deploy",{"command":"CloudGenerator.deployCloudFunctions","title":"Deploy Cloud Function Project"},vscode.TreeItemCollapsibleState.None,"cloudRun.svg")
+            new DeployElement("Cloud Function",{"command":"CloudGenerator.deployCloudFunctions","title":"Deploy Cloud Function Project"},vscode.TreeItemCollapsibleState.None,"google-cloud-functions-svgrepo-com.svg")
         ];
 
         return Promise.resolve(lista);
 
     }
 
+
+
 }
 
 
 
-class DeployFuncElement extends vscode.TreeItem {
+class DeployElement extends vscode.TreeItem {
     constructor(
         public readonly name: string,
         public readonly command:vscode.Command,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-        public readonly iconName:string,
+        public readonly iconName?:string
         ) 
     {
         super(name, collapsibleState);
-        this.iconPath = path.join(__filename,"..","..","icons/",iconName);
+
+
+
+        this.iconPath = path.join(__filename,"..","..","icons/",iconName ? iconName : "icons8-acesso-cloud-24.png");
     }
+
 }

@@ -1,5 +1,8 @@
 // Import all interfaces needed
 import {Ifunction, Regions} from "../../interfaces/interfaces";
+import * as vscode from 'vscode';
+
+
 
 // Require the modules used
 const util = require('node:util');
@@ -81,7 +84,7 @@ class System{
         if (stderr) {throw new Error("Could not execute the command to verify the path");}
         
         if (stdout.trim() === "False"){return false;}
-
+        
         if (stdout.trim() === "True"){return true;}
 
     }
@@ -139,41 +142,48 @@ class Gcp{
 
     // Create cloud function deploy
     /** 
+     * @param config Ifunction
+     * @param progress [OPTIONAL] The vscode with progress instance to be correcly uploaded 
      * 
      * @description This function create and deploy a new cloud function on current gcp project.
      * Note that if you to update a function, utilize the cloudFunctionUpdate.
-     * This function utilizes Google Cloud Storage to 
+     * This function utilizes Google Cloud Storage to store the code.
+     * @returns function url if it's a http trigger
      *
     */
-    async createCloudFunction(config:Ifunction){
+    async createCloudFunction(config:Ifunction,progress?:vscode.Progress<{message?: string | undefined;increment?: number | undefined;}>
+    ){
 
-        console.log("Iniciando processo...\n");
+        vscode.window.showInformationMessage("Iniciating the Cloud Function Deploy: "+config.name);
+        progress?.report({"increment":10});
+
+
         // Checks if folder exists
-        console.log("Verificando se a pasta existe\n");
         const pathExists = await this.systemClient.checkPath(config.localPath);
 
-        
         // If not return an error
         if (pathExists === false){throw new Error("The given folder does not exist.");}
+        progress?.report({"increment":30});
 
-
-        const zipFile:string = await this.systemClient.zipFolder(config.localPath+"\\*.*","testeZip",config.localPath).then(data => data);
-
+        // Creating a zip paste to save it in Cloud Storage
+        const zipFile:string = await this.systemClient.zipFolder(config.localPath+"\\*.*",config.name,config.localPath).then(data => data);
+        
+        progress?.report({"increment":40});
 
         // Upload content in Cloud Storage
-
-        const storagePath = `gs://teste-codes`;
+        const storagePath = `gs://${config.bucket}`;
 
         await this.systemClient.execSystemCommand(`gsutil cp ${zipFile} ${storagePath}`);
-        console.log("Codigo salvo no Cloud Storage\n");
+
+        vscode.window.showInformationMessage("Code saved no Cloud Storage!\n Bucket name: "+storagePath);
+        progress?.report({"increment":60});
 
         
-        config.storagePath = "gs://teste-codes/testeZip.zip";
+        config.storagePath = `gs://${config.bucket}/${config.name}.zip`;
 
         // Check instance config
         if (config.instanceConfig){
             let deployFlags = [];
-            
 
             if (config.instanceConfig?.memory){
                 deployFlags.push(" --memory="+config.instanceConfig?.memory);
@@ -203,12 +213,17 @@ class Gcp{
 
         }
 
-        console.log("Criando função no Cloud Function");
+        console.log(config);
+
         // Create function
         let request = await this.cloudFunctionDeploy(config)
         .then(data=>data);
 
-        return request;
+        
+
+        progress?.report({"increment":100});
+
+        // return request;
         
 
 
@@ -223,7 +238,6 @@ class Gcp{
      */
     private async cloudFunctionDeploy(config:Ifunction){
         
-        console.log("Criando func");
 
         // Command to be executed by gcloud CLI
         var defaultCommand = `gcloud functions deploy ${config.name} --runtime=${config.runtime} --source="${config.storagePath}" --entry-point=${config.entryPoint} --region=${Regions[config.region]} --quiet`;
@@ -241,24 +255,21 @@ class Gcp{
                 defaultCommand+=" --trigger";
             break;
         }
-        console.log("Command ", defaultCommand);
         // Execute the command
-        let request = await this.systemClient.execSystemCommand(defaultCommand).then(data=>data);
-
-        console.log(request)
-        
-
-        
-
-        // Return the URL for the deployed function
-        return  `https://${Regions[config.region]}-${this.projectId}.cloudfunctions.net/${config.name}`;
-
-    }
+        await this.systemClient.execSystemCommand(defaultCommand);
 
 
-    private async checkApis(api:string){
+        switch (config.trigger){
+            case "event":
+                return;
+            
+            case "http":
+                // Return the URL for the deployed function
+                return `https://${Regions[config.region]}-${this.projectId}.cloudfunctions.net/${config.name}`;
+        }
 
     }
+
 
 
 }

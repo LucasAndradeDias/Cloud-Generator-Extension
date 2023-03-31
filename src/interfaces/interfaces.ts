@@ -10,9 +10,10 @@
  * @param genearation The cloud functions generation you want to use (GEN 2 or GEN 1-default)
  * @param flags Flags you might want to add in deploy of new cloud function
  * @param instanceConfig more advanced configurations of the Function | InstanceConfig interface
+ * @param bucket The Cloud Storage Bucket the function should use.
  */
 export interface Ifunction {
-    name:string,
+    name:string ,
     localPath:string,
     trigger:"http" | "event",
     runtime:string,
@@ -23,6 +24,7 @@ export interface Ifunction {
     generation?:Generation
     flags?:string | string[]
     instanceConfig?:InstanceConfig,
+    bucket?:string
 
 }
 
@@ -78,6 +80,16 @@ export enum Generation{
     "GEN2"
 }
 
+
+export enum TriggerType{
+    "Http" = " --trigger-http",
+    "Pub/Sub event" = " --trigger-http",
+    "Cloud Storage event" = " --trigger-http",
+    "Firestore event" = " --trigger-http",
+    "Google Analytics event" = " --trigger-http",
+    "Firebase realtime database event" = " --trigger-http"
+
+}
 
 
 
