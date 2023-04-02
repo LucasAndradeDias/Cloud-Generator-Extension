@@ -93,7 +93,7 @@
         },
         {
           "id": "CloudGenerator",
-          "name": "Cloud Function",
+          "name": "serverless deploy",
           "icon": "icons/icons8-cloud-link-24.png"
         }
       ]

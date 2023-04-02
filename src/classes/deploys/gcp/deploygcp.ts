@@ -1,7 +1,7 @@
 
 import * as vscode from 'vscode';
-import { Gcp, System} from '../../tools/tools';
-import {Generation, Ifunction,InstanceConfig,Regions} from "../../../interfaces/interfaces"
+import { Gcp, System } from '../../tools/tools';
+import { Ifunction,Regions} from "../../../interfaces/interfaces";
 
 // Windows
 const deployCloudFunctions = async () =>{
@@ -14,8 +14,8 @@ const deployCloudFunctions = async () =>{
         runtime:"",
         trigger:"http"
     };
-
     
+
     // USER INPUTS
     
     // Local Project Path
@@ -24,7 +24,7 @@ const deployCloudFunctions = async () =>{
         title:"Google Cloud Functions Deploy",
         
         // Set a function to validate the input
-        validateInput: async (value:string ) =>{
+        validateInput: (value:string ) =>{
 
             // Remove any whitespace from the input
             value.replace(" ","");

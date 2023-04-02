@@ -12,8 +12,6 @@ export class DeployProvider implements vscode.TreeDataProvider<DeployElement>{
 
     getChildren(element?:DeployElement): Thenable<DeployElement[]>{
 
-
-
         //  return one element test
         let lista = [
             new DeployElement("Cloud Function",{"command":"CloudGenerator.deployCloudFunctions","title":"Deploy Cloud Function Project"},vscode.TreeItemCollapsibleState.None,"google-cloud-functions-svgrepo-com.svg")
@@ -22,8 +20,6 @@ export class DeployProvider implements vscode.TreeDataProvider<DeployElement>{
         return Promise.resolve(lista);
 
     }
-
-
 
 }
 
@@ -38,9 +34,7 @@ class DeployElement extends vscode.TreeItem {
         ) 
     {
         super(name, collapsibleState);
-
-
-
+        console.log("AA ",path.join(__filename,"..","..","icons/",iconName ? iconName : "icons8-acesso-cloud-24.png"));
         this.iconPath = path.join(__filename,"..","..","icons/",iconName ? iconName : "icons8-acesso-cloud-24.png");
     }
 

@@ -89,6 +89,29 @@ class System{
 
     }
 
+    /**
+     * @returns true if the windows system allows scripts in powershell (needed to run cmd commands for code templates functions and gcloud commands for deploy), 
+     * Otherwise, it will return false
+     * 
+     */
+
+    async checkPolicy(){
+
+        let {stderr,stdout} = await exec("Get-ExecutionPolicy",{shell:"powershell.exe"})
+    
+        switch (stdout.replace(/[\r\n]+/gm,"")){
+    
+            case("Unrestricted" || "AllSigned" || "RemoteSigned"):
+                return true;
+    
+            case ("Restricted" || "Default" || "Default"):
+                return false;
+    
+        }
+        if (stderr){return false};
+    
+    }
+    
 
 }
 
