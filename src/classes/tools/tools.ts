@@ -19,8 +19,7 @@ class System{
         
         if (stdout){return stdout;}
         else{
-            console.log(stderr);
-            return stderr };
+            return stderr ;};
         
     }
     
@@ -135,9 +134,7 @@ class Gcp{
     
             this.account = await this.systemClient.execSystemCommand('gcloud config get account');        
         }catch(err) {
-
-            console.log(err);
-
+            return err
         }
 
     }
@@ -154,11 +151,9 @@ class Gcp{
         // Execute the command using the 'execSystemCommand' function and handle the result with a promise
         await new System().execSystemCommand(command).then(()=>{
             // If the command is successful, log a message and update the project ID
-            console.log("Updated gcloud project for: "+newProjectId);
             this.projectId = newProjectId;
         // If the command fails, log an empty message
         }).catch(()=>{
-            console.log("");
             throw new Error("Error with change of project Id");
         });
     }
@@ -236,17 +231,15 @@ class Gcp{
 
         }
 
-        console.log(config);
-
         // Create function
         let request = await this.cloudFunctionDeploy(config)
         .then(data=>data);
-
         
-
+        
         progress?.report({"increment":100});
-
-        // return request;
+        
+        // return 
+        return Promise.resolve(request);
         
 
 

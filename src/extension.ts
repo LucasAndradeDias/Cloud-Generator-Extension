@@ -68,7 +68,8 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createEventJavaProject", ()=>{createJavaProject();}));
 
 	// Register treeitem for deploy options
-	vscode.window.registerTreeDataProvider("CloudGenerator",new DeployProvider());
+	let te = vscode.window.registerTreeDataProvider("CloudGenerator",new DeployProvider());
+
 
 	// Register TreeItem for serverless templates
 	vscode.window.registerTreeDataProvider("serverless-templates",new CodeTemplates());
