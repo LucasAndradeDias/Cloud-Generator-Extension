@@ -4,10 +4,9 @@ import { eventmainvalue, httpmainvalues, requirementsvalue } from './mainpyvalye
 
 
 const createPythonProject = async (type = "http") => {
+    let mainvalue = "";
 
-    var mainvalue = "";
-
-    if (type === "http") { mainvalue = httpmainvalues; } else { mainvalue = eventmainvalue; }
+    if (type === "http") { mainvalue = httpmainvalues; } else {mainvalue = eventmainvalue; }
 
     if (vscode.workspace.workspaceFolders !== undefined) {
 
