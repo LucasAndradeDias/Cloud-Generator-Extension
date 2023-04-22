@@ -16,13 +16,19 @@ import { createJavaProject } from './classes/create/cloud-functions/java/createj
 import { creatNodeProject } from './classes/create/cloud-functions/node/createnode';
 
 // Importing views
-import {DeployProvider} from "./Cloud-generatorProvider"
+import {DeployProvider} from "./classes/deploys/template-fast-deploy"
 import {CodeTemplates} from "./classes/create/template"
 
 
 
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
+
+	// Check OS (ONLY ALLOWED WINDOWS PLATFORM) 
+	if (!await new System().allowedSystem()){
+		vscode.window.showInformationMessage(`Sorry, but there this extension is avalible in Windows Platform.`)
+		return;
+	}
 
     // Check if it's allowed to run cmd commands
     if (!new System().checkPolicy){
@@ -64,19 +70,18 @@ export function activate(context: vscode.ExtensionContext) {
 	//Java
 	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createEventJavaProject", ()=>{createJavaProject();}));
 
+	// Register TreeItem for serverless templates
+	vscode.window.registerTreeDataProvider("serverless-templates",new CodeTemplates());
 
 	///////
-	// Deploy google cloud Function
-	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.deployCloudFunctions",()=>{deployCloudFunctions();}));
-	
+	// Fast-deploy
+
+
 	// Register treeitem for deploy options
 	vscode.window.registerTreeDataProvider("CloudGenerator",new DeployProvider());
 
-
-	// Register TreeItem for serverless templates
-	vscode.window.registerTreeDataProvider("serverless-templates",new CodeTemplates());
-	
-
+	// DEPLOY GOOGLE CLOUD FUNCTIONS
+	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.deployCloudFunctions",()=>{deployCloudFunctions();}));
 
 }	
 
