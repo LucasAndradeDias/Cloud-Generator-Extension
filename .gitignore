@@ -3,5 +3,8 @@ dist
 node_modules
 .vscode-test/
 *.vsix
-
+.eslintrc.json
+.yarnrc
+vsc-extension-quickstart.md
+yarn.lock
 notes.txt

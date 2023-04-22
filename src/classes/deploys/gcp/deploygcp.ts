@@ -1,9 +1,8 @@
 
 import * as vscode from 'vscode';
-import { Gcp, System } from '../../tools/tools';
+import { Gcp } from '../../tools/tools';
 import { Ifunction,Regions} from "../../../interfaces/interfaces";
 
-// Windows
 const deployCloudFunctions = async () =>{
     
     var config:Ifunction = {
@@ -15,11 +14,9 @@ const deployCloudFunctions = async () =>{
         trigger:"http"
     };
     
-
-    // USER INPUTS
     
     // Local Project Path
-    let projectPaht = await vscode.window.showInputBox({
+    const projectPaht = await vscode.window.showInputBox({
         placeHolder:"The path to project folder (ex. windows: 'C:/documents/FuncFunc')",
         title:"Google Cloud Functions Deploy",
         
@@ -33,7 +30,6 @@ const deployCloudFunctions = async () =>{
             let windowsRegex = new RegExp(/^([a-zA-Z]:)?(\\[^<>:"/\\|?*]+)+\\?$/).test(value);
             
             // If the input matches the regular expression, return null to indicate that it is valid. 
-            // Otherwise, return an error message.
             return  windowsRegex ? null : "Invalid path";}
             
     }).then(data=>{
@@ -44,21 +40,26 @@ const deployCloudFunctions = async () =>{
             }else{
                 projectPaht;
             }
-        
     });
 
+    if (config.localPath === "undefined"){return;}
+
     // Function name.
-    let funcName = await vscode.window.showInputBox({
+    const funcName = await vscode.window.showInputBox({
         placeHolder:"ID of the function or fully qualified identifier for the function. (ex. FuncFunc)",title:"Google Cloud Functions Deploy"
-    }).then(data=>{
+    }
+    ).then(data=>{
         if(data && data !== ("" || " ")){
             config.name = data;
-        }else{funcName;
+        }else{
+            funcName;
         }
     });
     
+    if (config.name === "undefined"){return;}
+
     // Prompt the user for the runtime of the function and set the value to the runtime property of the config object.
-    let runtime = await vscode.window.showInputBox({placeHolder:"The runtime of function (ex. Python39)",
+    const runtime = await vscode.window.showInputBox({placeHolder:"The runtime of function (ex. Python39)",
     "title":"Google Cloud Functions Deploy"})
     .then(data=>{
         if(data && data !== ("" || " ")){
@@ -68,8 +69,10 @@ const deployCloudFunctions = async () =>{
         }
     });
 
-    // Prompt the user for the runtime of the function and set the value to the runtime property of the config object.
-    let entryPoint = await vscode.window.showInputBox({placeHolder:"The entrypoint of function (ex. main)",
+    if (config.runtime === "undefined"){return;}
+
+    // Prompt the user for the entry-point of the function and set the value to the entry-point property of the config object.
+    const entryPoint = await vscode.window.showInputBox({placeHolder:"The entrypoint of function (ex. main)",
     "title":"Google Cloud Functions Deploy"})
     .then(data=>{
         if(data && data !== ("" || " ")){
@@ -79,8 +82,10 @@ const deployCloudFunctions = async () =>{
         }
     });
 
+    if (config.entryPoint){return;}
+
     // This code prompts the user to select a trigger type, using a quick pick menu with options provided as an array.
-    let triggerType = await vscode.window.showQuickPick(["Http",
+    const triggerType = await vscode.window.showQuickPick(["Http",
     "Pub/Sub event",
     "Cloud Storage event",
     "Firestore event",
@@ -90,12 +95,13 @@ const deployCloudFunctions = async () =>{
     .then(data=>{
         if(data && data !== ("" || " ")){
             config.trigger = "http";
-        }else{triggerType;
-        }
+        }else{triggerType;}
     });
 
+    if (config.trigger === null){return;}
+
     // The Cloud Storage Bucket the code will be saved;
-    let bucket = await vscode.window.showInputBox({placeHolder:"Cloud Storage Bucket to store the code",
+    const bucket = await vscode.window.showInputBox({placeHolder:"Cloud Storage Bucket to store the code",
     "title":"Google Cloud Functions Deploy"})
     .then(data=>{
         if(data && data !== ("" || " ")){
@@ -104,17 +110,16 @@ const deployCloudFunctions = async () =>{
             bucket;
         }
     });
-    
+
+    if (config.bucket === "undefined"){return;}
+
         
-    // Create a new instance of the Gcp class.
     const gcpClass = new Gcp();
-    
-    // Call the iniciate method of the Gcp class.
 
     await gcpClass.iniciate();
     
 
-    vscode.window.withProgress({"location":{"viewId":"CloudGenerator"},"title":"Teste progress"},
+    vscode.window.withProgress({"location":{"viewId":"CloudGenerator"},"title":"Cloud Functions Deploy"},
         async (progress)=>{
         
         

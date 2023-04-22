@@ -1,5 +1,3 @@
-
-
 # 0.4.5
 - New features:
     * App engine templates:

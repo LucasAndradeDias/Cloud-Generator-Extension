@@ -4,19 +4,27 @@ import { eventmainvalue, httpmainvalues, requirementsvalue } from './mainpyvalye
 
 
 const createPythonProject = async (type = "http") => {
-    let mainvalue = "";
 
-    if (type === "http") { mainvalue = httpmainvalues; } else {mainvalue = eventmainvalue; }
+    if (type === "http"){ var mainvalue = httpmainvalues;} else {var mainvalue = eventmainvalue; }
 
     if (vscode.workspace.workspaceFolders !== undefined) {
 
         
-        var projectName:string = "";
+        var projectName:string = "Python Cloud Functions Project";
 
-        await vscode.window.showInputBox({placeHolder:"Write the project name"}).then((value)=>{projectName = `${value}`;});
+        await vscode.window.showInputBox({placeHolder:"Write the project name",validateInput(value){
+            let regCheck = new RegExp ('[a-z\d]+');
+
+            if (!regCheck.test(value))
+            {return "Please give me a name.";}
+            
+            return null;
+
+        }}).then((value)=>{projectName = `${value}`;});
+
+        if(projectName === "undefined"){return;}
 
         
-
         // Uri of current workspace 
         let targeturi = vscode.workspace.workspaceFolders[0].uri;
 

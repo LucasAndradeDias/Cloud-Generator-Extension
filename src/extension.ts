@@ -30,10 +30,7 @@ export function activate(context: vscode.ExtensionContext) {
         return;
     }
 	
-	// Deploy Test
-	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.deployCloudFunctions",()=>{deployCloudFunctions();}));
-
-
+	
 	// APP ENGINE PRE BUILD TEMPLATES 
 	// Python
 	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createAppEnginePython",()=>{createAppEnginePythonProject();}));
@@ -42,10 +39,10 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createAppEngineExpress",()=>{createExpressAppengineProject();}));
 	// Node - React
 	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createAppEngineReact",()=>{createReactAppengineProject();}));
-
-
-
-
+	
+	
+	
+	
 	// CLOUD FUNCTION PRE BUILD TEMPLATE HTTP ----
 	// node
 	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createHttpNodeProject", ()=>{creatNodeProject();}));
@@ -57,18 +54,23 @@ export function activate(context: vscode.ExtensionContext) {
 	
 	// python
 	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createEventPythonFunction", ()=>{createPythonProject("event");}));
-
+	
 	// node
 	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createEventNodeProject", ()=>{creatNodeProject("event");}));
-
+	
 	// Golang
 	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createEventGoProject", ()=>{createGoProject();} ));
 
 	//Java
 	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createEventJavaProject", ()=>{createJavaProject();}));
 
+
+	///////
+	// Deploy google cloud Function
+	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.deployCloudFunctions",()=>{deployCloudFunctions();}));
+	
 	// Register treeitem for deploy options
-	let te = vscode.window.registerTreeDataProvider("CloudGenerator",new DeployProvider());
+	vscode.window.registerTreeDataProvider("CloudGenerator",new DeployProvider());
 
 
 	// Register TreeItem for serverless templates
@@ -76,7 +78,7 @@ export function activate(context: vscode.ExtensionContext) {
 	
 
 
-}
+}	
 
 export function deactivate() {}
 

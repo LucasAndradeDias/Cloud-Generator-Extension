@@ -8,10 +8,23 @@ const createExpressAppengineProject = async ()=>{
 
     if(vscode.workspace.workspaceFolders !== undefined) {
 
-        var projectName:string = "";
+        var projectName:string = "Express App Engine Project";
 
-        await vscode.window.showInputBox({placeHolder:"Write the project name"}).then((value)=>{projectName = `${value}`;});
+        await vscode.window.showInputBox({placeHolder:"Write the project name",validateInput(value) {
 
+            let regCheck = new RegExp ('[a-z\d]+');
+
+            if (!regCheck.test(value))
+            {return "Please give me a name.";}
+
+            return null
+        },
+        })
+        
+        .then((value:string | undefined)=>{projectName = `${value}`;});
+
+        if(projectName === "undefined"){return;}
+        
         // Uri of current workspace 
         let targeturi = vscode.workspace.workspaceFolders[0].uri;       
 
@@ -55,9 +68,22 @@ const createReactAppengineProject= async ()=>{
 
     if(vscode.workspace.workspaceFolders !== undefined) {
 
-        var projectName:string = "";
+        var projectName:string = "React App Engine Project";
 
-        await vscode.window.showInputBox({placeHolder:"Write the project name"}).then((value)=>{projectName = `${value}`;});
+
+        await vscode.window.showInputBox({placeHolder:"Write the project name",validateInput(value) {
+            let regCheck = new RegExp ('[a-z\d]+');
+
+            if (!regCheck.test(value))
+            {return "Please give me a name.";}
+
+            return null;
+        },
+        })
+        
+        .then((value:string | undefined)=>{projectName = `${value}`;});
+
+        if(projectName === "undefined"){return;}
 
 
         // Uri of current workspace 

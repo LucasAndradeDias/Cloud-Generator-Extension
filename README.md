@@ -1,6 +1,6 @@
 # Cloud Generator Extension (On development)
 
-This vs code extension allow users to easily create Cloud Computing apps with pre-build templates for differents languages and easy deploy buttons for Google Cloud Platform, Amazon Web Services and Microsoft Azure.
+This vs code extension allow users to easily create Cloud Computing apps with pre-build templates for differents languages and easy deploy function for Google Cloud Platform.
 
 ## Features
 
@@ -9,14 +9,6 @@ This vs code extension allow users to easily create Cloud Computing apps with pr
 ###### Cloud Functions Generator: Pre build code templates and deploy buttons;
 ###### App engine: Pre build code templates and deploy buttons;
 ###### Cloud Run: Pre build code templates and deploy buttons;
-
-### Amazon Web Services:
-###### Lambda: Pre build code templates and deploy buttons;
-
-### Microsoft Azure:
-###### 
-
-
 
 
 ## Requirements
