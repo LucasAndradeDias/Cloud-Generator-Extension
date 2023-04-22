@@ -1,7 +1,6 @@
-// Import all interfaces needed
 import {Ifunction, Regions} from "../../interfaces/interfaces";
 import * as vscode from 'vscode';
-
+import * as os from "node:os"
 
 
 // Require the modules used
@@ -36,7 +35,6 @@ class System{
         if (stdout){
             return stdout;
         }else{
-            console.log(stderr);
             return stderr; 
         };
     }
@@ -110,7 +108,16 @@ class System{
         if (stderr){return false};
     
     }
+
     
+    async allowedSystem(){
+
+        if(process.platform === "win32"){
+            return true;
+        }else {
+            return false;
+        }
+    }
 
 }
 
@@ -134,7 +141,7 @@ class Gcp{
     
             this.account = await this.systemClient.execSystemCommand('gcloud config get account');        
         }catch(err) {
-            return err
+            return err;
         }
 
     }

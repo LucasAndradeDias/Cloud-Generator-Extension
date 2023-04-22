@@ -6,7 +6,7 @@ export class DeployProvider implements vscode.TreeDataProvider<DeployElement>{
     
     private deployItems: DeployElement[];
     
-    constructor() {
+    constructor() {        
         
         this.deployItems = [
             new DeployElement("Google Cloud Platform",vscode.TreeItemCollapsibleState.Expanded,"google-cloud.svg") 
@@ -17,7 +17,7 @@ export class DeployProvider implements vscode.TreeDataProvider<DeployElement>{
         return element;
     }
 
-    getChildren(element?:DeployElement): Thenable<DeployElement[]>{
+    getChildren(element?:DeployElement): Thenable<DeployElement[]>{ 
 
         if (element){
             
@@ -67,3 +67,5 @@ class DeployElement extends vscode.TreeItem {
 
 
 }
+
+
