@@ -29,6 +29,7 @@ export class DeployProvider implements vscode.TreeDataProvider<DeployElement>{
                             vscode.TreeItemCollapsibleState.None,
                             "cloud_functions.svg",
                             {"command":"CloudGenerator.deployCloudFunctions","title":"Deploy Cloud Function Project"},
+
                         )
                     );
                     break;

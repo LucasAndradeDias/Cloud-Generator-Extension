@@ -1,6 +1,5 @@
 import {Ifunction, Regions} from "../../interfaces/interfaces";
 import * as vscode from 'vscode';
-import * as os from "node:os"
 
 
 // Require the modules used
@@ -182,11 +181,8 @@ class Gcp{
         vscode.window.showInformationMessage("Iniciating the Cloud Function Deploy: "+config.name);
         progress?.report({"increment":10});
 
-
-        // Checks if folder exists
         const pathExists = await this.systemClient.checkPath(config.localPath);
 
-        // If not return an error
         if (pathExists === false){throw new Error("The given folder does not exist.");}
         progress?.report({"increment":30});
 
@@ -206,11 +202,10 @@ class Gcp{
         
         config.storagePath = `gs://${config.bucket}/${config.name}.zip`;
 
-        // Check instance config
         if (config.instanceConfig){
-            let deployFlags = [];
+            let deployFlags:string[] = [];
 
-            if (config.instanceConfig?.memory){
+            if (config.instanceConfig?.memory ){
                 deployFlags.push(" --memory="+config.instanceConfig?.memory);
             }
             if(config.instanceConfig.securityLevel){
@@ -245,7 +240,6 @@ class Gcp{
         
         progress?.report({"increment":100});
         
-        // return 
         return Promise.resolve(request);
         
 
@@ -278,6 +272,7 @@ class Gcp{
                 defaultCommand+=" --trigger";
             break;
         }
+
         // Execute the command
         await this.systemClient.execSystemCommand(defaultCommand);
 
