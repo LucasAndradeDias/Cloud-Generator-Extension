@@ -42,7 +42,6 @@ const creatNodeProject = async (type="http")=>{
         
         const newuri = vscode.Uri.joinPath(targeturi,`${projectName}/src`);
         vscode.workspace.fs.createDirectory(newuri);
-        
 
         // Create main.js and add the content it takes 
         
@@ -53,8 +52,6 @@ const creatNodeProject = async (type="http")=>{
         const packagepath = vscode.Uri.joinPath(targeturi,`${projectName}/package.json`);
         vscode.workspace.fs.writeFile(packagepath, new TextEncoder().encode(packagevalue));
 
-
-        // Info about success 
         vscode.window.showInformationMessage("New NodeJs cloud functions project: '"+projectName+"' created." );
 
     } 

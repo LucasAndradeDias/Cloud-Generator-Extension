@@ -24,13 +24,11 @@ import {CodeTemplates} from "./classes/create/template"
 
 export async function activate(context: vscode.ExtensionContext) {
 
-	// Check OS (ONLY ALLOWED WINDOWS PLATFORM) 
 	if (!await new System().allowedSystem()){
 		vscode.window.showInformationMessage(`Sorry, but there this extension is avalible in Windows Platform.`)
 		return;
 	}
 
-    // Check if it's allowed to run cmd commands
     if (!new System().checkPolicy){
         vscode.window.showErrorMessage("Could run the needed scripts in command prompt. Please check your system scripts policy.");
         return;
@@ -81,7 +79,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	vscode.window.registerTreeDataProvider("CloudGenerator",new DeployProvider());
 
 	// DEPLOY GOOGLE CLOUD FUNCTIONS
-	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.deployCloudFunctions",()=>{deployCloudFunctions();}));
+	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.deployCloudFunctions",()=>{deployCloudFunctions()}));
 
 }	
 
