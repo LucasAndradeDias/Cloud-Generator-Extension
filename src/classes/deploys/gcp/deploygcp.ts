@@ -1,6 +1,6 @@
 
 import * as vscode from 'vscode';
-import { Gcp, System } from '../../tools/tools';
+import { Gcp, System } from '../../tools/gcp';
 import { Ifunction,Regions} from "../../../interfaces/interfaces";
 
 const deployCloudFunctions = async () =>{
@@ -45,7 +45,7 @@ const deployCloudFunctions = async () =>{
     if (confirm !== "deploy" || "true" || "yes") {return}
 
 
-    vscode.window.withProgress({"location":{"viewId":"CloudGenerator"},"title":"Cloud Functions Deploy"},
+    vscode.window.withProgress({"location":{"viewId":"skymate"},"title":"Cloud Functions Deploy"},
         async (progress)=>{
             
         await gcpClass.createCloudFunction(config)

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { System } from './classes/tools/tools';
+import { System } from './classes/tools/gcp';
 
 
 // Deploy functions
@@ -37,36 +37,36 @@ export async function activate(context: vscode.ExtensionContext) {
 	
 	// APP ENGINE PRE BUILD TEMPLATES 
 	// Python
-	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createAppEnginePython",()=>{createAppEnginePythonProject();}));
+	context.subscriptions.push(vscode.commands.registerCommand("skymate.createAppEnginePython",()=>{createAppEnginePythonProject();}));
 
 	// Node - express
-	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createAppEngineExpress",()=>{createExpressAppengineProject();}));
+	context.subscriptions.push(vscode.commands.registerCommand("skymate.createAppEngineExpress",()=>{createExpressAppengineProject();}));
 	// Node - React
-	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createAppEngineReact",()=>{createReactAppengineProject();}));
+	context.subscriptions.push(vscode.commands.registerCommand("skymate.createAppEngineReact",()=>{createReactAppengineProject();}));
 	
 	
 	
 	
 	// CLOUD FUNCTION PRE BUILD TEMPLATE HTTP ----
 	// node
-	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createHttpNodeProject", ()=>{creatNodeProject();}));
+	context.subscriptions.push(vscode.commands.registerCommand("skymate.createHttpNodeProject", ()=>{creatNodeProject();}));
 	// python
-	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createHttpPythonFunction", ()=>{createPythonProject();}));
+	context.subscriptions.push(vscode.commands.registerCommand("skymate.createHttpPythonFunction", ()=>{createPythonProject();}));
 
 
 	// CLOUD FUNCTION PRE BUILD TEMPLATES EVENT DRIVEN  ----- 
 	
 	// python
-	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createEventPythonFunction", ()=>{createPythonProject("event");}));
+	context.subscriptions.push(vscode.commands.registerCommand("skymate.createEventPythonFunction", ()=>{createPythonProject("event");}));
 	
 	// node
-	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createEventNodeProject", ()=>{creatNodeProject("event");}));
+	context.subscriptions.push(vscode.commands.registerCommand("skymate.createEventNodeProject", ()=>{creatNodeProject("event");}));
 	
 	// Golang
-	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createEventGoProject", ()=>{createGoProject();} ));
+	context.subscriptions.push(vscode.commands.registerCommand("skymate.createEventGoProject", ()=>{createGoProject();} ));
 
 	//Java
-	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.createEventJavaProject", ()=>{createJavaProject();}));
+	context.subscriptions.push(vscode.commands.registerCommand("skymate.createEventJavaProject", ()=>{createJavaProject();}));
 
 	// Register TreeItem for serverless templates
 	vscode.window.registerTreeDataProvider("serverless-templates",new CodeTemplates());
@@ -76,10 +76,10 @@ export async function activate(context: vscode.ExtensionContext) {
 
 
 	// Register treeitem for deploy options
-	vscode.window.registerTreeDataProvider("CloudGenerator",new DeployProvider());
+	vscode.window.registerTreeDataProvider("skymate",new DeployProvider());
 
 	// DEPLOY GOOGLE CLOUD FUNCTIONS
-	context.subscriptions.push(vscode.commands.registerCommand("CloudGenerator.deployCloudFunctions",()=>{deployCloudFunctions()}));
+	context.subscriptions.push(vscode.commands.registerCommand("skymate.deployCloudFunctions",()=>{deployCloudFunctions()}));
 
 }	
 
