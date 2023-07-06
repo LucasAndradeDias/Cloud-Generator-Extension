@@ -1,7 +1,7 @@
 {
-  "name": "cloud-generator",
-  "displayName": "CloudGenerator",
-  "description": "A tool to help to build Cloud Computing serveless projects",
+  "name": "SkyMate",
+  "displayName": "SkyMate",
+  "description": "Tools to help you to build Cloud Computing serveless projects",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.75.0"
@@ -10,89 +10,89 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:CloudGenerator.createAppEnginePython",
-    "onCommand:CloudGenerator.createAppEngineExpress",
-    "onCommand:CloudGenerator.createAppEngineReact",
-    "onCommand:CloudGenerator.createHttpPythonFunction",
-    "onCommand:CloudGenerator.createHttpNodeProject",
-    "onCommand:CloudGenerator.createEventPythonFunction",
-    "onCommand:CloudGenerator.createEventNodeProject",
-    "onCommand:CloudGenerator.createEventGoProject",
-    "onCommand:CloudGenerator.createEventJavaProject",
-    "onCommand:CloudGenerator.deployCloudFunctions"
+    "onCommand:skymate.createAppEnginePython",
+    "onCommand:skymate.createAppEngineExpress",
+    "onCommand:skymate.createAppEngineReact",
+    "onCommand:skymate.createHttpPythonFunction",
+    "onCommand:skymate.createHttpNodeProject",
+    "onCommand:skymate.createEventPythonFunction",
+    "onCommand:skymate.createEventNodeProject",
+    "onCommand:skymate.createEventGoProject",
+    "onCommand:skymate.createEventJavaProject",
+    "onCommand:skymate.deployCloudFunctions"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "CloudGenerator.deployCloudFunctions",
-        "category": "Cloud-Generator-Functions",
+        "command": "skymate.deployCloudFunctions",
+        "category": "Cloud-skymate-Functions",
         "title": "Deploy Cloud Functions",
         "icon": "icons/icons8-cloud-link-24.png"
       },
       {
-        "command": "CloudGenerator.createAppEnginePython",
-        "category": "Cloud-Generator-AppEngine",
+        "command": "skymate.createAppEnginePython",
+        "category": "Cloud-skymate-AppEngine",
         "title": "Create python app engine project"
       },
       {
-        "command": "CloudGenerator.createAppEngineExpress",
-        "category": "Cloud-Generator-AppEngine",
+        "command": "skymate.createAppEngineExpress",
+        "category": "Cloud-skymate-AppEngine",
         "title": "Create node express project"
       },
       {
-        "command": "CloudGenerator.createAppEngineReact",
-        "category": "Cloud-Generator-AppEngine",
+        "command": "skymate.createAppEngineReact",
+        "category": "Cloud-skymate-AppEngine",
         "title": "Create node React project"
       },
       {
-        "command": "CloudGenerator.createHttpPythonFunction",
-        "category": "Cloud-Generator-Functions",
+        "command": "skymate.createHttpPythonFunction",
+        "category": "Cloud-skymate-Functions",
         "title": "Create python http cloud function project"
       },
       {
-        "command": "CloudGenerator.createHttpNodeProject",
-        "category": "Cloud-Generator-Functions",
+        "command": "skymate.createHttpNodeProject",
+        "category": "Cloud-skymate-Functions",
         "title": "Create node http cloud function project"
       },
       {
-        "command": "CloudGenerator.createEventNodeProject",
-        "category": "Cloud-Generator-Functions",
+        "command": "skymate.createEventNodeProject",
+        "category": "Cloud-skymate-Functions",
         "title": "Create node event cloud function project"
       },
       {
-        "command": "CloudGenerator.createEventPythonFunction",
-        "category": "Cloud-Generator-Functions",
+        "command": "skymate.createEventPythonFunction",
+        "category": "Cloud-skymate-Functions",
         "title": "Create python event cloud function project"
       },
       {
-        "command": "CloudGenerator.createEventGoProject",
-        "category": "Cloud-Generator-Functions",
+        "command": "skymate.createEventGoProject",
+        "category": "Cloud-skymate-Functions",
         "title": "Create golang event cloud function project"
       },
       {
-        "command": "CloudGenerator.createEventJavaProject",
-        "category": "Cloud-Generator-Functions",
+        "command": "skymate.createEventJavaProject",
+        "category": "Cloud-skymate-Functions",
         "title": "Create java event cloud function project"
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "Cloud-Generator",
-          "title": "Cloud Generator",
+          "id": "Cloud-skymate",
+          "title": "Cloud skymate",
           "icon": "icons/icons8-cloud-link-24.png"
         }
       ]
     },
     "views": {
-      "Cloud-Generator": [
+      "Cloud-skymate": [
         {
           "id": "serverless-templates",
           "name": "Code templates"
         },
         {
-          "id": "CloudGenerator",
+          "id": "skymate",
           "name": "serverless deploy",
           "icon": "icons/icons8-cloud-link-24.png"
         }
